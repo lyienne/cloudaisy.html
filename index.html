@@ -16,17 +16,20 @@
       margin: 0;
       position: relative;
       overflow: hidden;
+      padding: 20px;
     }
     .card {
-      width: 420px;
-      height: 530px;
-      background-color: #faf7f8;
-      padding: 15px;
+      width: 300px;
+      max-width: 100%;
+      height: 420px;
+      background-color: #f5f5f5;
+      padding: 18px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      border: 2px solid #000000;
-      box-shadow: 0 0 8px rgba(255, 182, 193, 0.3);
+      box-shadow: 0 0 10px rgba(255, 182, 193, 0.4);
+      border-radius: 16px;
+      position: relative;
     }
     .header {
       display: flex;
@@ -36,6 +39,8 @@
       padding: 5px 10px;
       font-weight: bold;
       font-size: 18px;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     .header span:first-child,
     .header span:last-child {
@@ -44,16 +49,17 @@
     }
     .message-box {
       flex: 1;
-      margin: 10px 0;
-      background: #ffe6f1;
-      padding: 8px;
+      margin: 12px 0;
+      background: #ffedf3;
+      padding: 16px;
       overflow-y: auto;
       position: relative;
-      font-size: 16px;
-      line-height: 1.5;
+      font-size: 14px;
+      line-height: 1.65;
       color: #333;
       white-space: pre-wrap;
-      font-weight: 500;
+      border-radius: 12px;
+      box-shadow: inset 0 0 6px rgba(255, 182, 193, 0.3);
     }
     .message-line {
       display: block;
@@ -67,6 +73,13 @@
     }
     .footer span:nth-child(2) {
       font-weight: normal;
+    }
+    .footer button {
+      background: none;
+      border: none;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
     }
     .sparkle {
       position: absolute;
@@ -93,91 +106,138 @@
       from, to { background-color: transparent; }
       50% { background-color: #ff85b4; }
     }
+    .title-overlay {
+      display: none;
+    }
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: flex;
+      flex-direction: column;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div id="page1" class="card page active">
     <div class="header">
       <span>ABC</span>
-      <span>to: doll-faced friends</span>
+      <span>To: darling</span>
       <span>✉️</span>
     </div>
     <div class="message-box">
-      <div class="message" id="message"></div>
+      <div class="message" id="message1"></div>
     </div>
     <div class="footer">
       <span><b>Send</b></span>
       <span>#unsentproject</span>
-      <span><b>Back</b></span>
+      <button onclick="showPage(2)"><b>Next</b></button>
     </div>
   </div>
+
+  <div id="page2" class="card page">
+    <div class="header">
+      <span>ABC</span>
+      <span>To: soft soul</span>
+      <span>✉️</span>
+    </div>
+    <div class="message-box">
+      <div class="message" id="message2"></div>
+    </div>
+    <div class="footer">
+      <button onclick="showPage(1)"><b>Back</b></button>
+      <span>#unsentproject</span>
+      <span><b>Sent ✓</b></span>
+    </div>
+  </div>
+
   <audio id="type-sound" src="https://cdn.pixabay.com/audio/2023/03/20/audio_b4d1ed0a43.mp3"></audio>
- <script>
-    const lines = [
-      "greetings, wanderer.",
-      "",
-      "you’ve now entered my private dump dimension—a quiet nook of my digital mind,",
-      "accessible only to those i trust deeply (and whose souls probably sparkle under moonlight).",
-      "",
 
-      "this space contains:",
-      "• unedited brain static + floating thoughts",
-      "• reposts of things that made my heart go “oh.”",
-      "• silly rants with zero punctuation",
-      "• soft chaos, dream logic, and maybe a few overshares",
-      "• an accidental archive of feelings i forgot to hide",
-      "",
+  <script>
+    const pages = document.querySelectorAll('.page');
 
-      "rules of the realm:",
-      "• no judging the mess (we recycle emotions here)",
-      "• no fixing—just witnessing",
-      "• hugs are implied. snacks, encouraged.",
-      "",
-
-      "if this isn’t your vibe or feels a little too loud in your headspace,",
-      "feel free to unfriend, restrict, or quietly vanish with love.",
-      "no drama, just boundaries.",
-      "",
-
-      "and if you choose to stay—thank you.",
-      "you’re now part of my trusted little constellation.",
-      "please be kind, the walls here are made of soft things."
-    ];
-
-    const messageEl = document.getElementById("message");
-    const typeSound = document.getElementById("type-sound");
-
-    let lineIndex = 0;
-    function typeLine() {
-      if (lineIndex >= lines.length) return;
-      const lineText = lines[lineIndex];
-      const lineDiv = document.createElement("div");
-      if (lineIndex === 0) lineDiv.style.fontWeight = "bold";
-      messageEl.appendChild(lineDiv);
-      let charIndex = 0;
-
-      const cursor = document.createElement("span");
-      cursor.className = "typing-cursor";
-      lineDiv.appendChild(cursor);
-
-      function typeChar() {
-        if (charIndex <= lineText.length) {
-          lineDiv.textContent = lineText.slice(0, charIndex);
-          lineDiv.appendChild(cursor);
-          typeSound.currentTime = 0;
-          typeSound.play();
-          charIndex++;
-          setTimeout(typeChar, 35);
-        } else {
-          cursor.remove();
-          lineIndex++;
-          setTimeout(typeLine, 200);
-        }
-      }
-      typeChar();
+    function showPage(num) {
+      pages.forEach((pg, i) => pg.classList.toggle('active', i === num - 1));
     }
 
-    typeLine();
+    const pageMessages = {
+      message1: [
+        "greetings, wanderer.",
+        "",
+        "you’ve now entered my private dump dimension—a quiet nook of my digital mind, accessible only to those i trust deeply (and whose souls probably sparkle under moonlight).",
+        "",
+        "this space contains:",
+        "• unedited brain static + floating thoughts",
+        "• reposts of things that made my heart go “oh.”",
+        "• silly rants with zero punctuation",
+        "• soft chaos, dream logic, and maybe a few overshares",
+        "• an accidental archive of feelings i forgot to hide",
+        "",
+        "rules of the realm:",
+        "• no judging the mess (we recycle emotions here)",
+        "• no fixing—just witnessing",
+        "• hugs are implied. snacks, encouraged.",
+        "",
+        "if this isn’t your vibe or feels a little too loud in your headspace, feel free to unfriend, restrict, or quietly vanish with love.",
+        "no drama, just boundaries.",
+        "",
+        "and if you choose to stay—thank you.",
+        "you’re now part of my trusted little constellation. please be kind, the walls here are made of soft things."
+      ],
+      message2: [
+        "continued musings:",
+        "",
+        "sometimes i leave breadcrumbs in posts—like dream fragments or feelings pressed between digital pages.",
+        "",
+        "it’s okay if you don’t get it all.",
+        "even i reread old things and feel like a stranger wrote them.",
+        "",
+        "memory is weird. love is weirder.",
+        "but i still believe in the soft power of being known—even just a little.",
+        "",
+        "if any of this makes you feel less alone, then i’ve done something right."
+      ]
+    };
+
+    const typeSound = document.getElementById("type-sound");
+
+    function typeMessage(id, lines, delay = 35) {
+      const container = document.getElementById(id);
+      let lineIndex = 0;
+
+      function typeLine() {
+        if (lineIndex >= lines.length) return;
+        const line = lines[lineIndex];
+        const div = document.createElement("div");
+        if (lineIndex === 0) div.style.fontWeight = "bold";
+        container.appendChild(div);
+
+        const cursor = document.createElement("span");
+        cursor.className = "typing-cursor";
+        div.appendChild(cursor);
+
+        let charIndex = 0;
+        function typeChar() {
+          if (charIndex <= line.length) {
+            div.textContent = line.slice(0, charIndex);
+            div.appendChild(cursor);
+            typeSound.currentTime = 0;
+            typeSound.play();
+            charIndex++;
+            setTimeout(typeChar, delay);
+          } else {
+            cursor.remove();
+            lineIndex++;
+            setTimeout(typeLine, 200);
+          }
+        }
+        typeChar();
+      }
+      typeLine();
+    }
+
+    typeMessage("message1", pageMessages.message1);
+    typeMessage("message2", pageMessages.message2);
 
     for (let i = 0; i < 40; i++) {
       const sparkle = document.createElement('div');
